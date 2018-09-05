@@ -2,9 +2,13 @@
   "name": "dva-block",
   "version": "0.1.0",
   "description": "a Redux module solution. Inspired by Dvajs.",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "files": [
+    "lib/*",
+    "index.d.ts"
+  ],
   "repository": "https://github.com/ClouderSky/dva-block.git",
-  "author": "ClouderSky <work_p@163.com>",
+  "author": "ClouderSky <clouder@cloudersky.cn>",
   "license": "MIT",
   "dependencies": {
     "@types/react-redux": "^6.0.6",

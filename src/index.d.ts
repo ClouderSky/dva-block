@@ -123,8 +123,10 @@ type BlockCreator<B extends BlockMap> = {
     [key in keyof B] : () => BlockInstance<B[key]>;
 };
 
+type NodeEnv = 'development' | 'testing' | 'production';
+
 declare class Application<B extends BlockMap> implements IApp {
-    constructor (initialState ?: Dict);
+    constructor (env : NodeEnv, initialState ?: Dict);
 
     history : History;
 
@@ -137,6 +139,6 @@ declare class Application<B extends BlockMap> implements IApp {
 }
 
 type AppCreator = <B extends BlockMap>(blockMap : B) =>
-    { new(initialState ?: Dict) : Application<B> };
+    { new (env : NodeEnv, initialState ?: Dict) : Application<B> };
 
 declare const app : AppCreator;

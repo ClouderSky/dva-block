@@ -1,6 +1,6 @@
 
 import {
-    Store, createStore, combineReducers, applyMiddleware,
+    Store, Middleware, createStore, combineReducers, applyMiddleware,
 } from 'redux';
 import createSagaMiddleware, { SagaMiddleware, Task } from 'redux-saga';
 import { defaultMemoize } from 'reselect';
@@ -9,7 +9,7 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import {
-    Dict, Model, Saga, IApp, AppCreator,
+    Dict, Model, Saga, IApp, AppCreator, NodeEnv,
     BlockMap, BlockCreator, Block,
 } from './';
 
@@ -17,6 +17,8 @@ import {
 export class Application<B extends BlockMap> implements IApp {
 
     public history : History;
+
+    private env : NodeEnv;
 
     private store : Store;
 
@@ -28,7 +30,8 @@ export class Application<B extends BlockMap> implements IApp {
 
     private initialState : Dict;
 
-    constructor (initialState ?: Dict) {
+    constructor (env : NodeEnv, initialState ?: Dict) {
+        this.env = env;
         this.initialState = initialState;
     }
 
@@ -59,17 +62,27 @@ export class Application<B extends BlockMap> implements IApp {
         return routeWrapper(combineReducers(reducers));
     }
 
+    public getMiddleware () : Middleware[] {
+        return [];
+    }
+
     public getStore () {
         if ( !this.store ) {
             this.history = createBrowserHistory();
             this.sagaMiddleware = createSagaMiddleware();
+
+            const middleware = applyMiddleware(
+                this.sagaMiddleware,
+                routerMiddleware(this.history),
+                ...this.getMiddleware(),
+            );
+            const storeEnhancer = 'development' === this.env ?
+                composeWithDevTools(middleware) : middleware;
+
             this.store = createStore(
                 this.getModelReducer(),
                 this.initialState,
-                composeWithDevTools(applyMiddleware(
-                    this.sagaMiddleware,
-                    routerMiddleware(this.history),
-                )),
+                storeEnhancer,
             )
         }
         return this.store;

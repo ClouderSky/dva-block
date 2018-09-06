@@ -1,8 +1,9 @@
 {
   "name": "dva-block",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "a Redux module solution. Inspired by Dvajs.",
   "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib"
   ],
@@ -41,6 +42,7 @@
     "typescript": "^3.0.3"
   },
   "scripts": {
+    "deploy": "yarn build && yarn publish",
     "build": "gulp",
     "test": "jest"
   }

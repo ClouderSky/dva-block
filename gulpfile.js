@@ -6,7 +6,7 @@ const tsProject = ts.createProject('tsconfig.json');
 
 
 gulp.task('default', function () {
-    gulp.src('./src/*.d.ts').pipe(gulp.dest('.'));
+    gulp.src('./src/*.d.ts').pipe(gulp.dest('lib'));
 
     const tsResult = tsProject.src()
         .pipe(tsProject());
